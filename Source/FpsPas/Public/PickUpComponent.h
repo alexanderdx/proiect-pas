@@ -12,7 +12,7 @@
 // The character picking this up is the parameter sent with the notification
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPickUp, AFpsPasCharacter*, PickUpCharacter);
 
-UCLASS(Abstract, Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FPSPAS_API UPickUpComponent : public USphereComponent
 {
 	GENERATED_BODY()

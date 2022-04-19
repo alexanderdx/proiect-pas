@@ -9,7 +9,7 @@
 
 class AFpsPasCharacter;
 
-UCLASS(Abstract, Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FPSPAS_API UWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
