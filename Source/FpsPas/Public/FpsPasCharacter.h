@@ -34,7 +34,7 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	FTouchData TouchItem;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category="Mesh", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* Mesh1P;
 
 	/** First person camera */
