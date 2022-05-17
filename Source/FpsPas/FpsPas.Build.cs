@@ -15,7 +15,9 @@ public class FpsPas : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"HeadMountedDisplay"
+			"HeadMountedDisplay",
+			"UMG",
+			"UMGEditor"
 		});
 	}
 }
