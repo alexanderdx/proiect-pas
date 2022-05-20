@@ -130,3 +130,8 @@ bool AFpsPasCharacter::EnableTouchscreenMovement(UInputComponent* const& PlayerI
 
 	return true;
 }
+
+void AFpsPasCharacter::CollectAmmo(const int& ammo) 
+{
+	OnCollectAmmo.Broadcast(ammo);
+}

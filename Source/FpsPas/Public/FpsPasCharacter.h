@@ -18,6 +18,7 @@ class USoundBase;
 // Declaration of the delegate that will be called when the Primary Action is triggered
 // It is declared as dynamic so it can be accessed also in Blueprints
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCollectAmmo, int, Ammo);
 
 UCLASS(Abstract, Config="Game")
 class FPSPAS_API AFpsPasCharacter : public ACharacter
@@ -49,6 +50,9 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	/** Delegate to whom anyone can subscribe to receive this event */
 	UPROPERTY(BlueprintAssignable, Category="Interaction", meta=(AllowPrivateAccess="true"))
 	FOnUseItem OnUseItem;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	FOnCollectAmmo OnCollectAmmo;
 
 public:
 	AFpsPasCharacter();
@@ -102,4 +106,11 @@ public:
 	/** Returns OnUseItem delegate **/
 	FORCEINLINE FOnUseItem& GetOnUseItem() { return OnUseItem; }
 	FORCEINLINE const FOnUseItem& GetOnUseItem() const { return OnUseItem; }
+
+	FORCEINLINE FOnCollectAmmo& GetOnStoneCollected() { return OnCollectAmmo; }
+	FORCEINLINE const FOnCollectAmmo& GetOnStoneCollected() const { return OnCollectAmmo; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void CollectAmmo(const int& ammo);
+
 };
