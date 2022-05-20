@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FpsPasPlayerController.h"
 #include "GameFramework/Character.h"
 #include "FpsPasCharacter.generated.h"
 
@@ -51,6 +52,9 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 
 public:
 	AFpsPasCharacter();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 StonesAmountSlingshot;
 
 protected:
 	/** Fires a projectile. */
@@ -88,7 +92,7 @@ protected:
 	 * @returns true if touch controls were enabled.
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* const& PlayerInputComponent);
-
+	
 public:
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE USkeletalMeshComponent* const& GetMesh1P() const { return Mesh1P; }
