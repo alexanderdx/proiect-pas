@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FpsPasGameMode.h"
+
+#include "FpsPasPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 

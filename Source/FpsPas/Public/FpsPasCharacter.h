@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FpsPasPlayerController.h"
 #include "GameFramework/Character.h"
 #include "FpsPasCharacter.generated.h"
 
@@ -17,6 +18,7 @@ class USoundBase;
 // Declaration of the delegate that will be called when the Primary Action is triggered
 // It is declared as dynamic so it can be accessed also in Blueprints
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCollectAmmo, int, Ammo);
 
 UCLASS(Abstract, Config="Game")
 class FPSPAS_API AFpsPasCharacter : public ACharacter
@@ -34,7 +36,7 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	FTouchData TouchItem;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category="Mesh", meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* Mesh1P;
 
 	/** First person camera */
@@ -49,8 +51,14 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	UPROPERTY(BlueprintAssignable, Category="Interaction", meta=(AllowPrivateAccess="true"))
 	FOnUseItem OnUseItem;
 
+	UPROPERTY(BlueprintAssignable, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	FOnCollectAmmo OnCollectAmmo;
+
 public:
 	AFpsPasCharacter();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 StonesAmountSlingshot;
 
 protected:
 	/** Fires a projectile. */
@@ -88,7 +96,7 @@ protected:
 	 * @returns true if touch controls were enabled.
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* const& PlayerInputComponent);
-
+	
 public:
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE USkeletalMeshComponent* const& GetMesh1P() const { return Mesh1P; }
@@ -98,4 +106,11 @@ public:
 	/** Returns OnUseItem delegate **/
 	FORCEINLINE FOnUseItem& GetOnUseItem() { return OnUseItem; }
 	FORCEINLINE const FOnUseItem& GetOnUseItem() const { return OnUseItem; }
+
+	FORCEINLINE FOnCollectAmmo& GetOnStoneCollected() { return OnCollectAmmo; }
+	FORCEINLINE const FOnCollectAmmo& GetOnStoneCollected() const { return OnCollectAmmo; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void CollectAmmo(const int& ammo);
+
 };
