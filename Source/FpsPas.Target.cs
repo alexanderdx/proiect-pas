@@ -12,6 +12,7 @@ public class FpsPasTarget : TargetRules
 		
 		ExtraModuleNames.AddRange(new[]
 		{
+			"Animals",
 			"FpsPas"
 		});
 	}

@@ -6,11 +6,12 @@
 #include "Animation/AnimInstance.h"
 #include "AnimalAnimInstance.generated.h"
 
+
 /**
  * 
  */
 UCLASS()
-class FPSPAS_API UAnimalAnimInstance : public UAnimInstance
+class ANIMALS_API UAnimalAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 
@@ -21,7 +22,7 @@ public:
 private:
 	/** Lateral Movement speed */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float Speed = 0.f;
+	float Speed = 0.0f;
 	
 	/** Chasing target flag */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))

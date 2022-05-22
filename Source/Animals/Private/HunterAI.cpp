@@ -3,7 +3,6 @@
 
 #include "HunterAI.h"
 #include "AnimalController.h"
-#include "FpsPasCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -60,26 +59,20 @@ void AHunterAI::BeginPlay()
 	}
 }
 
-
 void AHunterAI::OnPawnSeen(APawn* SeenPawn)
 {
-	if (SeenPawn == nullptr) return;;
-
-	auto Character = Cast<AFpsPasCharacter>(SeenPawn);
-	if (Character)
+	if (!SeenPawn || !IsInterestedInPawn(SeenPawn))
+		return;
+	
+	if (AnimalController)
 	{
-		if (AnimalController)
+		if (AnimalController->GetBlackboardComponent())
 		{
-			if (AnimalController->GetBlackboardComponent())
-			{
-				AnimalController->GetBlackboardComponent()->SetValueAsObject(
-					TEXT("TargetPlayer"), 
-					Character);
+			AnimalController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetPlayer"), SeenPawn);
 
-				bChasing = true;
-				GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
-				FindPlayerTargetTimer = 0.f;
-			}
+			bChasing = true;
+			GetCharacterMovement()->MaxWalkSpeed = ChasingSpeed;
+			FindPlayerTargetTimer = 0.0f;
 		}
 	}
 }
