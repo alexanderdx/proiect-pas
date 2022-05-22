@@ -49,6 +49,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "FpsPas | Combat", meta = (AllowPrivateAccess = "true"))
 	bool bCanAttack = true;
 
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool bDead = false;
+
 	FTimerHandle AttackWaitTimer;
 	
 	/** Minimum wait time between attacks */
@@ -65,4 +68,5 @@ private:
 
 public:
 	FORCEINLINE bool IsChasing() const { return bChasing; }
+	FORCEINLINE bool IsDead() const { return bDead; }
 };

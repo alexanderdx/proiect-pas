@@ -24,6 +24,7 @@ void UAnimalAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		if (Hunter)
 		{
 			bChasing = Hunter->IsChasing();
+			bPreyDead = Hunter->IsDead();
 		}
 
 		APreyAI* Prey = Cast<APreyAI>(Animal);

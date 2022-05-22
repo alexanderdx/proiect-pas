@@ -98,6 +98,9 @@ void AHunterAI::ResetCanAttack()
 
 void AHunterAI::PlayAttackMontage(FName Section, float PlayRate)
 {
+	if (bDead)
+		return;
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
