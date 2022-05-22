@@ -2,10 +2,10 @@
 
 #include "FpsPasCharacter.h"
 #include "FpsPasProjectile.h"
-#include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/InputSettings.h"
 
 
@@ -28,21 +28,40 @@ AFpsPasCharacter::AFpsPasCharacter()
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
+	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
+
+	Distorsion = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Distorsion"));
+	Distorsion->SetupAttachment(FirstPersonCameraComponent);
+	Distorsion->SetOnlyOwnerSee(true);
+	Distorsion->bCastDynamicShadow = false;
+	Distorsion->CastShadow = false;
+	Distorsion->SetRelativeLocation(FVector(80.0f, 0.0f, 0.0f));
+	Distorsion->SetRelativeScale3D(FVector(4.0f));
+	Distorsion->SetAutoActivate(false);
 }
 
-//////////////////////////////////////////////////////////////////////////// Input
+void AFpsPasCharacter::CollectAmmo(const int32 Ammo) const
+{
+	OnCollectAmmo.Broadcast(Ammo);
+}
+
+void AFpsPasCharacter::ToggleDistorsion() const
+{
+	Distorsion->ToggleActive();
+}
 
 void AFpsPasCharacter::OnPrimaryAction()
 {
 	// Trigger the OnItemUsed Event
 	OnUseItem.Broadcast();
 }
+
+//////////////////////////////////////////////////////////////////////////// Input
 
 void AFpsPasCharacter::MoveForward(const float Value)
 {
@@ -129,9 +148,4 @@ bool AFpsPasCharacter::EnableTouchscreenMovement(UInputComponent* const& PlayerI
 	PlayerInputComponent->BindTouch(IE_Released, this, &AFpsPasCharacter::EndTouch);
 
 	return true;
-}
-
-void AFpsPasCharacter::CollectAmmo(const int& ammo) 
-{
-	OnCollectAmmo.Broadcast(ammo);
 }

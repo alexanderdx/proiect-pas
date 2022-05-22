@@ -14,8 +14,9 @@ public class FpsPas : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"InputCore",
 			"HeadMountedDisplay",
+			"InputCore",
+			"Niagara",
 			"UMG",
 			"UMGEditor"
 		});

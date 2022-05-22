@@ -3,22 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FpsPasPlayerController.h"
 #include "GameFramework/Character.h"
 #include "FpsPasCharacter.generated.h"
 
 
-class UInputComponent;
-class USkeletalMeshComponent;
-class USceneComponent;
-class UCameraComponent;
 class UAnimMontage;
+class UCameraComponent;
+class UInputComponent;
+class UNiagaraComponent;
+class USceneComponent;
+class USkeletalMeshComponent;
 class USoundBase;
 
 // Declaration of the delegate that will be called when the Primary Action is triggered
 // It is declared as dynamic so it can be accessed also in Blueprints
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCollectAmmo, int, Ammo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCollectAmmo, const int32, Ammo);
 
 UCLASS(Abstract, Config="Game")
 class FPSPAS_API AFpsPasCharacter : public ACharacter
@@ -43,9 +43,15 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess="true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Particles", meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* Distorsion;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess="true"))
 	float TurnRateGamepad;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Ammo", meta = (AllowPrivateAccess = "true"))
+    int32 StonesAmountSlingshot;
 
 	/** Delegate to whom anyone can subscribe to receive this event */
 	UPROPERTY(BlueprintAssignable, Category="Interaction", meta=(AllowPrivateAccess="true"))
@@ -56,9 +62,12 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 
 public:
 	AFpsPasCharacter();
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 StonesAmountSlingshot;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void CollectAmmo(const int32 Ammo) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Particles")
+	void ToggleDistorsion() const;
 
 protected:
 	/** Fires a projectile. */
@@ -98,19 +107,40 @@ protected:
 	bool EnableTouchscreenMovement(UInputComponent* const& PlayerInputComponent);
 	
 public:
+	FORCEINLINE FTouchData& GetTouchItem() { return TouchItem; }
+	FORCEINLINE const FTouchData& GetTouchItem() const { return TouchItem; }
+	
 	/** Returns Mesh1P subobject **/
+	FORCEINLINE USkeletalMeshComponent*& GetMesh1P() { return Mesh1P; }
 	FORCEINLINE USkeletalMeshComponent* const& GetMesh1P() const { return Mesh1P; }
+	
 	/** Returns FirstPersonCameraComponent subobject **/
+	FORCEINLINE UCameraComponent*& GetFirstPersonCameraComponent() { return FirstPersonCameraComponent; }
 	FORCEINLINE UCameraComponent* const& GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	/** Returns Distorsion subobject **/
+	FORCEINLINE UNiagaraComponent*& GetDistorsion() { return Distorsion; }
+	FORCEINLINE UNiagaraComponent* const& GetDistorsion() const { return Distorsion; }
+
+	FORCEINLINE const float& GetTurnRateGamepad() const { return TurnRateGamepad; }
+	FORCEINLINE AFpsPasCharacter* SetTurnRateGamepad(const float& Value)
+	{
+		TurnRateGamepad = Value;
+		return this;
+	}
+
+	FORCEINLINE const int32& GetStonesAmountSlingshot() const { return StonesAmountSlingshot; }
+	FORCEINLINE AFpsPasCharacter* SetStonesAmountSlingshot(const int32& Value)
+	{
+		StonesAmountSlingshot = Value;
+		return this;
+	}
 
 	/** Returns OnUseItem delegate **/
 	FORCEINLINE FOnUseItem& GetOnUseItem() { return OnUseItem; }
 	FORCEINLINE const FOnUseItem& GetOnUseItem() const { return OnUseItem; }
 
+	/** Returns OnCollectAmmo delegate **/
 	FORCEINLINE FOnCollectAmmo& GetOnStoneCollected() { return OnCollectAmmo; }
 	FORCEINLINE const FOnCollectAmmo& GetOnStoneCollected() const { return OnCollectAmmo; }
-
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void CollectAmmo(const int& ammo);
-
 };
