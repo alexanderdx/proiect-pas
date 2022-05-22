@@ -54,11 +54,16 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	UPROPERTY(BlueprintAssignable, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
 	FOnCollectAmmo OnCollectAmmo;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	UPawnNoiseEmitterComponent* NoiseEmitterComponent;
+
 public:
 	AFpsPasCharacter();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 StonesAmountSlingshot;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	/** Fires a projectile. */

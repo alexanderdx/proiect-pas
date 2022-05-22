@@ -17,7 +17,9 @@ public class FpsPas : ModuleRules
 			"InputCore",
 			"HeadMountedDisplay",
 			"UMG",
-			"UMGEditor"
+			"UMGEditor",
+			"NavigationSystem",
+			"AIModule"
 		});
 	}
 }
