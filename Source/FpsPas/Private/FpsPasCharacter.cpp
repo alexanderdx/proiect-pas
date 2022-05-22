@@ -2,12 +2,12 @@
 
 #include "FpsPasCharacter.h"
 #include "FpsPasProjectile.h"
-#include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "GameFramework/InputSettings.h"
+#include "NiagaraComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,31 +22,41 @@ AFpsPasCharacter::AFpsPasCharacter()
 	TurnRateGamepad = 45.0f;
 
 	// Create a CameraComponent	
-	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.0f)); // Position the camera
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
+	FirstPersonCamera->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.0f)); // Position the camera
+	FirstPersonCamera->bUsePawnControlRotation = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P->SetupAttachment(FirstPersonCamera);
 	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
+
+	Distortion = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Distortion"));
+	Distortion->SetupAttachment(FirstPersonCamera);
+	Distortion->SetOnlyOwnerSee(true);
+	Distortion->bCastDynamicShadow = false;
+	Distortion->CastShadow = false;
+	Distortion->SetRelativeLocation(FVector(80.0f, 0.0f, 0.0f));
+	Distortion->SetRelativeScale3D(FVector(4.0f));
+	Distortion->SetAutoActivate(false);
 
 	// Initialize the noise emitter component
-	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("Noise Emitter"));
+	NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter"));
 }
 
-//////////////////////////////////////////////////////////////////////////// Input
-
-void AFpsPasCharacter::Tick(float DeltaSeconds)
+void AFpsPasCharacter::CollectAmmo(const int32 Ammo) const
 {
-	Super::Tick(DeltaSeconds);
+	OnCollectAmmo.Broadcast(Ammo);
+}
 
-	PawnMakeNoise(1, GetActorLocation(), true, this);
+void AFpsPasCharacter::ToggleDistortion() const
+{
+	Distortion->ToggleActive();
 }
 
 void AFpsPasCharacter::OnPrimaryAction()
@@ -54,6 +64,8 @@ void AFpsPasCharacter::OnPrimaryAction()
 	// Trigger the OnItemUsed Event
 	OnUseItem.Broadcast();
 }
+
+//////////////////////////////////////////////////////////////////////////// Input
 
 void AFpsPasCharacter::MoveForward(const float Value)
 {
@@ -131,6 +143,13 @@ void AFpsPasCharacter::SetupPlayerInputComponent(UInputComponent* const PlayerIn
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AFpsPasCharacter::LookUpAtRate);
 }
 
+void AFpsPasCharacter::Tick(const float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	PawnMakeNoise(1.0f, GetActorLocation(), true, this);
+}
+
 bool AFpsPasCharacter::EnableTouchscreenMovement(UInputComponent* const& PlayerInputComponent)
 {
 	if (!FPlatformMisc::SupportsTouchInput() && !GetDefault<UInputSettings>()->bUseMouseForTouch)
@@ -140,9 +159,4 @@ bool AFpsPasCharacter::EnableTouchscreenMovement(UInputComponent* const& PlayerI
 	PlayerInputComponent->BindTouch(IE_Released, this, &AFpsPasCharacter::EndTouch);
 
 	return true;
-}
-
-void AFpsPasCharacter::CollectAmmo(const int& ammo) 
-{
-	OnCollectAmmo.Broadcast(ammo);
 }

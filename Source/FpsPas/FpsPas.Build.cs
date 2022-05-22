@@ -11,15 +11,16 @@ public class FpsPas : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new[]
 		{
+			"AIModule",
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"InputCore",
 			"HeadMountedDisplay",
-			"UMG",
-			"UMGEditor",
+			"InputCore",
 			"NavigationSystem",
-			"AIModule"
+			"Niagara",
+			"UMG",
+			"UMGEditor"
 		});
 	}
 }
