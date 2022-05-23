@@ -17,8 +17,7 @@ public class FpsPas : ModuleRules
 			"Engine",
 			"InputCore",
 			"Niagara",
-			"UMG",
-			"UMGEditor"
+			"UMG"
 		});
 	}
 }
