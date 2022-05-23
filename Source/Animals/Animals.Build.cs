@@ -3,22 +3,22 @@
 using UnrealBuildTool;
 
 
-public class FpsPas : ModuleRules
+public class Animals : ModuleRules
 {
-	public FpsPas(ReadOnlyTargetRules Target) : base(Target)
+	public Animals(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		PublicDependencyModuleNames.AddRange(new[]
+		{
+			"AIModule"
+		});
+		
 		PrivateDependencyModuleNames.AddRange(new[]
 		{
-			"Animals",
 			"Core",
 			"CoreUObject",
-			"Engine",
-			"InputCore",
-			"Niagara",
-			"UMG",
-			"UMGEditor"
+			"Engine"
 		});
 	}
 }

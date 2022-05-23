@@ -13,5 +13,5 @@ class AFpsPasGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AFpsPasGameMode();
+	explicit AFpsPasGameMode(const FObjectInitializer& ObjectInitializer);
 };

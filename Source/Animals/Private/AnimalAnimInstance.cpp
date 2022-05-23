@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AnimalAnimInstance.h"
 #include "AnimalAI.h"
 #include "HunterAI.h"
 #include "PreyAI.h"
+
 
 void UAnimalAnimInstance::UpdateAnimationProperties(float DeltaTime)
 {
@@ -24,6 +24,7 @@ void UAnimalAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		if (Hunter)
 		{
 			bChasing = Hunter->IsChasing();
+			bPreyDead = Hunter->IsDead();
 		}
 
 		APreyAI* Prey = Cast<APreyAI>(Animal);

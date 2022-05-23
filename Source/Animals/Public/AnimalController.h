@@ -6,11 +6,12 @@
 #include "AIController.h"
 #include "AnimalController.generated.h"
 
+
 /**
  * 
  */
 UCLASS()
-class FPSPAS_API AAnimalController : public AAIController
+class ANIMALS_API AAnimalController : public AAIController
 {
 	GENERATED_BODY()
 

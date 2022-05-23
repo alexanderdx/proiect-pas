@@ -1,21 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AnimalAI.h"
 
 #include "AnimalController.h"
-#include "FpsPasCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/TargetPoint.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
+
 AAnimalAI::AAnimalAI()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing Comp"));
+}
+
+bool AAnimalAI::IsInterestedInPawn_Implementation(APawn* const& Pawn)
+{
+	return false;
 }
 
 void AAnimalAI::BeginPlay()
@@ -52,7 +56,6 @@ void AAnimalAI::BeginPlay()
 		AnimalController->RunBehaviorTree(BehaviorTree);
 	}
 }
-
 
 void AAnimalAI::Tick(float DeltaTime)
 {

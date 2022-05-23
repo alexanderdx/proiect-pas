@@ -6,11 +6,12 @@
 #include "AnimalAI.h"
 #include "PreyAI.generated.h"
 
+
 /**
  * 
  */
 UCLASS()
-class FPSPAS_API APreyAI : public AAnimalAI
+class ANIMALS_API APreyAI : public AAnimalAI
 {
 	GENERATED_BODY()
 
@@ -18,7 +19,7 @@ public:
 	APreyAI();
 	
 	virtual void Tick(float DeltaSeconds) override;
-
+	
 private:
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
@@ -27,7 +28,7 @@ private:
 	void OnPawnHeard(APawn* InstigatorPawn, const FVector& Location, float Volume);
 
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	class AFpsPasCharacter* TargetCharacter;
+	APawn* TargetCharacter;
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	class AHunterAI* TargetHunter;
@@ -51,8 +52,7 @@ private:
 	float RunningAwayTimer = 6.f;
 
 public:
-	FORCEINLINE AFpsPasCharacter* GetTarget() const { return TargetCharacter; }
+	FORCEINLINE APawn* GetTarget() const { return TargetCharacter; }
 	FORCEINLINE bool IsRunning() const { return bRunAway; }
 	FORCEINLINE bool IsDead() const { return bDead; }
 };
-

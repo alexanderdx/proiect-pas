@@ -6,8 +6,9 @@
 #include "GameFramework/Character.h"
 #include "AnimalAI.generated.h"
 
-UCLASS()
-class FPSPAS_API AAnimalAI : public ACharacter
+
+UCLASS(Abstract)
+class ANIMALS_API AAnimalAI : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -15,12 +16,12 @@ public:
 	AAnimalAI();
 
 protected:
+	UFUNCTION(BlueprintNativeEvent)
+	bool IsInterestedInPawn(APawn* const& Pawn);
+	
 	virtual void BeginPlay() override;
-
-public:	
 	virtual void Tick(float DeltaTime) override;
-
-protected:
+	
 	UPROPERTY(EditAnywhere, Category = "FpsPas | Behavior Tree")
 	class UBehaviorTree* BehaviorTree;
 
