@@ -26,6 +26,31 @@ AFpsPasCharacter::AFpsPasCharacter()
 	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCamera->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.0f)); // Position the camera
 	FirstPersonCamera->bUsePawnControlRotation = true;
+	FirstPersonCamera->PostProcessBlendWeight = 1.0f;
+
+	DefaultPostProcess = FPostProcessSettings();
+	DefaultPostProcess.BloomIntensity = 1.25f;
+	DefaultPostProcess.AutoExposureMethod = AEM_Manual;
+	DefaultPostProcess.AutoExposureBias = 10.32f;
+	DefaultPostProcess.LensFlareIntensity = 0.25f;
+	DefaultPostProcess.WhiteTemp = 7378.0f;
+	DefaultPostProcess.ColorSaturation = FVector4(1.075f, 1.075f, 1.075f, 1.0f);
+	DefaultPostProcess.AmbientOcclusionIntensity = 1.0f;
+	
+	DefaultPostProcess.bOverride_BloomIntensity = true;
+	DefaultPostProcess.bOverride_AutoExposureMethod = true;
+	DefaultPostProcess.bOverride_AutoExposureBias = true;
+	DefaultPostProcess.bOverride_LensFlareIntensity = true;
+	DefaultPostProcess.bOverride_WhiteTemp = true;
+	DefaultPostProcess.bOverride_ColorSaturation = true;
+	DefaultPostProcess.bOverride_AmbientOcclusionIntensity = true;
+
+	DistortionPostProcess = DefaultPostProcess;
+	DistortionPostProcess.SceneFringeIntensity = 10.0f;
+	DistortionPostProcess.VignetteIntensity = 0.8f;
+	
+	DistortionPostProcess.bOverride_SceneFringeIntensity = true;
+	DistortionPostProcess.bOverride_VignetteIntensity = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
@@ -54,9 +79,16 @@ void AFpsPasCharacter::CollectAmmo(const int32 Ammo) const
 	OnCollectAmmo.Broadcast(Ammo);
 }
 
-void AFpsPasCharacter::ToggleDistortion() const
+void AFpsPasCharacter::EnableDistortion() const
 {
-	Distortion->ToggleActive();
+	FirstPersonCamera->PostProcessSettings = DistortionPostProcess;
+	Distortion->Activate();
+}
+
+void AFpsPasCharacter::DisableDistortion() const
+{
+	FirstPersonCamera->PostProcessSettings = DefaultPostProcess;
+	Distortion->Deactivate();
 }
 
 void AFpsPasCharacter::OnPrimaryAction()
@@ -113,6 +145,13 @@ void AFpsPasCharacter::EndTouch(const ETouchIndex::Type, const FVector)
 		return;
 	
 	TouchItem.bIsPressed = false;
+}
+
+void AFpsPasCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	DisableDistortion();
 }
 
 void AFpsPasCharacter::SetupPlayerInputComponent(UInputComponent* const PlayerInputComponent)

@@ -49,6 +49,12 @@ class FPSPAS_API AFpsPasCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UPawnNoiseEmitterComponent> NoiseEmitter;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	FPostProcessSettings DefaultPostProcess;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	FPostProcessSettings DistortionPostProcess;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess="true"))
 	float TurnRateGamepad;
@@ -69,8 +75,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void CollectAmmo(const int32 Ammo) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Particles")
-	void ToggleDistortion() const;
+	UFUNCTION(BlueprintCallable, Category = "Distortion")
+	void EnableDistortion() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Distortion")
+	void DisableDistortion() const;
 
 protected:
 	/** Fires a projectile. */
@@ -96,6 +105,8 @@ protected:
 	
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+
+	virtual void BeginPlay() override;
 	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* const PlayerInputComponent) override;
@@ -127,6 +138,14 @@ public:
 	/** Returns NoiseEmitter subobject **/
 	FORCEINLINE TObjectPtr<UPawnNoiseEmitterComponent>& GetNoiseEmitter() { return NoiseEmitter; }
 	FORCEINLINE const TObjectPtr<UPawnNoiseEmitterComponent>& GetNoiseEmitter() const { return NoiseEmitter; }
+
+	/** Returns DefaultPostProcess struct **/
+	FORCEINLINE FPostProcessSettings& GetDefaultPostProcess() { return DefaultPostProcess; }
+	FORCEINLINE const FPostProcessSettings& GetDefaultPostProcess() const { return DefaultPostProcess; }
+
+	/** Returns DistortionPostProcess struct **/
+	FORCEINLINE FPostProcessSettings& GetDistortionPostProcess() { return DistortionPostProcess; }
+	FORCEINLINE const FPostProcessSettings& GetDistortionPostProcess() const { return DistortionPostProcess; }
 
 	/** Returns OnUseItem delegate **/
 	FORCEINLINE FOnUseItem& GetOnUseItem() { return OnUseItem; }
